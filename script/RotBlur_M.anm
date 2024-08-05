@@ -49,7 +49,7 @@ if GLShaderKit.isInitialized() then
     GLShaderKit.setShader(shader_path, reload)
     GLShaderKit.setFloat("resolution", w, h)
     GLShaderKit.setFloat("pivot", x + w * 0.5, y + h * 0.5)
-    GLShaderKit.setFloat("amount", amount)
+    GLShaderKit.setFloat("stepAngle", amount / quality)
     GLShaderKit.setFloat("rPos", amount * r_pos)
     GLShaderKit.setInt("quality", quality)
     GLShaderKit.setTexture2D(0, data, w, h)
