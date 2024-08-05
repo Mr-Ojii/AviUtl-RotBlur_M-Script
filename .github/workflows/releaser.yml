@@ -16,7 +16,7 @@ jobs:
       run: |
         mv script/* ./
         zip RotBlur_M -r LICENSE.txt Readme.md RotBlur_M.anm RotBlur_M.frag RotBlur_M.vert Licenses
-    
+
     - name: Create Release
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

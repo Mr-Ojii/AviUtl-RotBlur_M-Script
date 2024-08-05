@@ -15,17 +15,17 @@ mat2 rot_mat(float angle) { return mat2(cos(angle), -sin(angle), sin(angle), cos
 
 void main() {
     vec4 color = vec4(0);
-	mat2 rot1 = rot_mat(stepAngle);
-	mat2 rot2 = rot_mat(-stepAngle);
-	vec2 uv1 = (TexCoord * resolution - pivot) * rot_mat(rPos);
-	vec2 uv2 = uv1;
+    mat2 rot1 = rot_mat(stepAngle);
+    mat2 rot2 = rot_mat(-stepAngle);
+    vec2 uv1 = (TexCoord * resolution - pivot) * rot_mat(rPos);
+    vec2 uv2 = uv1;
 
-	for(int i = 1; i <= quality; i++){
-		uv1 *= rot1;
-		color += texture(texture0, clamp((uv1 + pivot) / resolution, 0, 1));
-		
-		uv2 *= rot2;
-		color += texture(texture0, clamp((uv2 + pivot) / resolution, 0, 1));
-	}
+    for(int i = 1; i <= quality; i++){
+        uv1 *= rot1;
+        color += texture(texture0, clamp((uv1 + pivot) / resolution, 0, 1));
+        
+        uv2 *= rot2;
+        color += texture(texture0, clamp((uv2 + pivot) / resolution, 0, 1));
+    }
     FragColor = color / (quality * 2);
 }
