@@ -1,0 +1,65 @@
+--track0:X,-10000,10000,0
+--track1:Y,-10000,10000,0
+--track2:amount,0,1800,30
+--track3:r_pos,-100,100,0
+--dialog:keep_size/chk,_1=1;quality,_2=256;reload/chk,_3=0;PI,_0=nil
+
+obj.setanchor("track", 0, "line")
+
+-- 変換もする
+_0 = _0 or {}
+local x = _0[1] or obj.track0
+local y = _0[2] or obj.track1
+-- 2方向なのであらかじめ2で割る
+local amount = (_0[3] or obj.track2) / 360 * math.pi
+-- ティム氏のものと挙動を合わせるためマイナス
+local r_pos = (_0[4] or obj.track3) / -100
+-- ティム氏のものをexo書き換えで適用しても正常に動作するよう、ckもチェックしておく
+local keep_size = (_1 or ck or 1) ~= 0
+-- 角度解像度ダウンも疑似的に(計算方法を確認していないため、不正確)
+local quality = math.max(math.floor(_2 or (amount * 80 / sdw) or 200), 1)
+local reload = (_3 or 0) ~= 0
+
+_0 = nil
+_1 = nil
+_2 = nil
+_3 = nil
+
+local data, w, h
+w, h = obj.getpixel()
+local r = math.sqrt(w * w + h * h)
+if not keep_size then
+    local addX, addY = math.ceil((r - w) / 2 + 1), math.ceil((r - h) / 2 + 1)
+    obj.effect("領域拡張", "上", addY, "下", addY, "右", addX, "左", addX)
+end
+
+if amount == 0 then
+    return
+end
+
+local GLShaderKit = require "GLShaderKit"
+
+local shader_path = obj.getinfo("script_path").."RotBlur_M.frag"
+
+data, w, h = obj.getpixeldata()
+
+if GLShaderKit.isInitialized() then
+    GLShaderKit.activate()
+    GLShaderKit.setPlaneVertex(1)
+    GLShaderKit.setShader(shader_path, reload)
+    GLShaderKit.setFloat("resolution", w, h)
+    GLShaderKit.setFloat("pivot", x + w * 0.5, y + h * 0.5)
+    GLShaderKit.setFloat("amount", amount)
+    GLShaderKit.setFloat("rPos", amount * r_pos)
+    GLShaderKit.setInt("quality", quality)
+    GLShaderKit.setTexture2D(0, data, w, h)
+    GLShaderKit.draw("TRIANGLES", data, w, h)
+
+    GLShaderKit.deactivate()
+else
+    obj.setfont("MS UI Gothic", obj.track2 + 30)
+    obj.load("text", "RotBlur_M is not available on this device.\nRotBlur_Mはこのデバイスでは使用できません。")
+    obj.draw()
+end
+
+obj.putpixeldata(data)
