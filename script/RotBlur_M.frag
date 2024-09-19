@@ -10,13 +10,11 @@ uniform int quality;
 uniform vec2 resolution;
 uniform vec2 pivot;
 uniform mat2 rPos;
-
-mat2 rot_mat(float angle) { return mat2(cos(angle), -sin(angle), sin(angle), cos(angle)); }
+uniform mat2 rot1;
+uniform mat2 rot2;
 
 void main() {
     vec4 color = vec4(0);
-    mat2 rot1 = rot_mat(stepAngle);
-    mat2 rot2 = rot_mat(-stepAngle);
     vec2 uv1 = (TexCoord * resolution - pivot) * rPos;
     vec2 uv2 = uv1;
 
