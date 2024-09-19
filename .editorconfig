@@ -9,7 +9,7 @@ end_of_line = lf
 [*.yml]
 indent_size = 2
 
-[*.anm]
+[*.{anm,lua}]
 end_of_line = crlf
 
 [*.md]
