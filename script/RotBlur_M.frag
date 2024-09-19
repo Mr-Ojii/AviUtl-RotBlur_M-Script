@@ -14,9 +14,9 @@ uniform mat2 rot1;
 uniform mat2 rot2;
 
 void main() {
-    vec4 color = vec4(0);
     vec2 uv1 = (TexCoord * resolution - pivot) * rPos;
     vec2 uv2 = uv1;
+    vec4 color = texture(texture0, clamp((uv1 + pivot) / resolution, 0, 1));
 
     for(int i = 1; i <= quality; i++){
         uv1 *= rot1;
@@ -25,5 +25,5 @@ void main() {
         uv2 *= rot2;
         color += texture(texture0, clamp((uv2 + pivot) / resolution, 0, 1));
     }
-    FragColor = color / (quality * 2);
+    FragColor = color / (quality * 2 + 1);
 }

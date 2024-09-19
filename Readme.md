@@ -17,7 +17,7 @@ AviUtl拡張編集用、GPUを使用した高速回転ブラースクリプト
 ### keep_size
 サイズを保持したままエフェクトをかけるか
 ### quality
-描画回数 / 2  
+(描画回数 - 1) / 2  
 数字が大きければ大きいほどブラーとしての精度は向上するが、重くなります。
 ### reload
 シェーダーを都度リロードするか  
@@ -42,5 +42,5 @@ RotBlur_M.RotBlur_M(x, y, amount, r_pos, keep_size, quality, reload)
 |amount   |角度                  |number |ラジアン|
 |r_pos    |基準座標              |number |なし    |
 |keep_size|サイズ保持            |boolean|なし    |
-|quality  |描画回数/2            |number |回      |
+|quality  |(描画回数 - 1) / 2    |number |なし    |
 |reload   |シェーダーの再読み込み|boolean|なし    |
