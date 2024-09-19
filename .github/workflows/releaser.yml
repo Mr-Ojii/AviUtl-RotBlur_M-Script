@@ -15,7 +15,7 @@ jobs:
     - name: Create Archive
       run: |
         mv script/* ./
-        zip RotBlur_M -r LICENSE.txt Readme.md RotBlur_M.anm RotBlur_M.frag RotBlur_M.vert Licenses
+        zip RotBlur_M -r LICENSE.txt Readme.md RotBlur_M.* Licenses
 
     - name: Create Release
       env:
