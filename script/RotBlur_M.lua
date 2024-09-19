@@ -1,36 +1,36 @@
 local RotBlur_M = {}
 
-RotBlur_M.RotBlur_M = function(x, y, amount, r_pos, keep_size, quality, reload)
+-- define local function
+local function script_path()
+    return debug.getinfo(1).source:match("@?(.*[/\\])")
+end
 
-    -- define local function
-    local function script_path()
-        return debug.getinfo(1).source:match("@?(.*[/\\])")
-    end
+local function rot_mat(angle)
+    return { math.cos(angle), -math.sin(angle), math.sin(angle), math.cos(angle) }
+end
+----
 
-    local function rot_mat(angle)
-        return { math.cos(angle), -math.sin(angle), math.sin(angle), math.cos(angle) }
-    end
-    ----
+local GLShaderKit = require "GLShaderKit"
 
-    local data, w, h
-    w, h = obj.getpixel()
-    local r = math.sqrt(w * w + h * h)
-    if not keep_size then
-        local addX, addY = math.ceil((r - w) / 2 + 1), math.ceil((r - h) / 2 + 1)
-        obj.effect("領域拡張", "上", addY, "下", addY, "右", addX, "左", addX)
-    end
+local shader_path = script_path().."RotBlur_M.frag"
 
-    if amount == 0 then
-        return
-    end
+if GLShaderKit.isInitialized() then
+    RotBlur_M.RotBlur_M = function(x, y, amount, r_pos, keep_size, quality, reload)
 
-    local GLShaderKit = require "GLShaderKit"
+        local data, w, h
+        w, h = obj.getpixel()
+        local r = math.sqrt(w * w + h * h)
+        if not keep_size then
+            local addX, addY = math.ceil((r - w) / 2 + 1), math.ceil((r - h) / 2 + 1)
+            obj.effect("領域拡張", "上", addY, "下", addY, "右", addX, "左", addX)
+        end
 
-    local shader_path = script_path().."RotBlur_M.frag"
+        if amount == 0 then
+            return
+        end
 
-    data, w, h = obj.getpixeldata()
+        data, w, h = obj.getpixeldata()
 
-    if GLShaderKit.isInitialized() then
         GLShaderKit.activate()
         GLShaderKit.setPlaneVertex(1)
         GLShaderKit.setShader(shader_path, reload)
@@ -45,14 +45,15 @@ RotBlur_M.RotBlur_M = function(x, y, amount, r_pos, keep_size, quality, reload)
         GLShaderKit.draw("TRIANGLES", data, w, h)
 
         GLShaderKit.deactivate()
-    else
-        obj.setfont("MS UI Gothic", obj.track2 + 30)
+
+        obj.putpixeldata(data)
+    end
+else
+    RotBlur_M.RotBlur_M = function(x, y, amount, r_pos, keep_size, quality, reload)
+        obj.setfont("MS UI Gothic", amount + 30)
         obj.load("text", "RotBlur_M is not available on this device.\nRotBlur_Mはこのデバイスでは使用できません。")
         obj.draw()
     end
-
-    obj.putpixeldata(data)
-
 end
 
 return RotBlur_M
