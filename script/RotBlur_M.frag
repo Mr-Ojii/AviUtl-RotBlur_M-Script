@@ -30,7 +30,8 @@ void main() {
         color += c;
     }
 
-    color.rgb /= color.a;
-    color.a /= quality * 2 + 1;
-    FragColor = color;
+    float is_zero = step(color.a, 0.0);
+    color.rgb = mix(color.rgb / max(color.a, 0.0001), vec3(0.0), is_zero);
+    color.a /= (quality * 2 + 1);
+    FragColor = clamp(color, 0.0, 1.0);
 }
